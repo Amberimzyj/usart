@@ -1,0 +1,1356 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"humid",
+				"humid2"
+			],
+			[
+				"DL_LN",
+				"DL_LN33_Rece.h"
+			],
+			[
+				"dela",
+				"delay_ms"
+			],
+			[
+				"DA",
+				"da\tchar [20] da"
+			],
+			[
+				"DL_",
+				"DL_LN33.h"
+			],
+			[
+				"loop",
+				"loopAll"
+			],
+			[
+				"DATA",
+				"data"
+			],
+			[
+				"in",
+				"inc\t#include \"…\""
+			],
+			[
+				"inc",
+				"include\tinclude \"header\""
+			],
+			[
+				"USART",
+				"USART_PutStr"
+			],
+			[
+				"USART_Pu",
+				"USART2_PutChar"
+			],
+			[
+				"USART_S",
+				"USART_SendData"
+			],
+			[
+				"b",
+				"bHex"
+			],
+			[
+				"de",
+				"delay_us\tint delay_us()"
+			],
+			[
+				"delay",
+				"delay_ms\tint delay_ms()"
+			],
+			[
+				"def",
+				"define\tdefine macro"
+			],
+			[
+				"AM2320_",
+				"AM2320_Wakeup"
+			],
+			[
+				"AM",
+				"AM2320_Send_Read\tvoid AM2320_Send_Read()"
+			],
+			[
+				"USART_Get",
+				"USART_GetFlagStatus"
+			],
+			[
+				"re",
+				"return\treturn expression"
+			],
+			[
+				"IIC_",
+				"IIC_Wait_Ack\tint IIC_Wait_Ack()"
+			],
+			[
+				"IIC_S",
+				"IIC_Start"
+			],
+			[
+				"0xb",
+				"0xB8"
+			],
+			[
+				"delay_",
+				"delay_ms"
+			],
+			[
+				"AM2320",
+				"AM2320_Wakeup\tvoid AM2320_Wakeup()"
+			],
+			[
+				"IIc_S",
+				"IIC_Send_Byte\tvoid IIC_Send_Byte(int txd)"
+			],
+			[
+				"AM2320_R",
+				"AM2320_ReadOneByte"
+			],
+			[
+				"IIC",
+				"IIC_Stop"
+			],
+			[
+				"Da",
+				"DataToWrite\tint DataToWrite"
+			],
+			[
+				"D",
+				"DataToWrite"
+			],
+			[
+				"SDA",
+				"SDA_OUT\tvoid SDA_OUT()"
+			],
+			[
+				"v",
+				"void"
+			],
+			[
+				"DEL",
+				"delay_us\tint delay_us()"
+			],
+			[
+				"DE",
+				"delay_us"
+			],
+			[
+				"del",
+				"delay_us"
+			],
+			[
+				"GPIO_P",
+				"GPIO_Pin_7"
+			],
+			[
+				"GPIO",
+				"GPIOB"
+			],
+			[
+				"GP",
+				"GPIO_InitStructure"
+			],
+			[
+				"GPIO_",
+				"GPIO_InitStructure"
+			],
+			[
+				"G",
+				"GPIO_Mode"
+			],
+			[
+				"t",
+				"times\tu16 times"
+			],
+			[
+				"USART_",
+				"USART_RX_STA"
+			],
+			[
+				"pop",
+				"popleft\tfunction"
+			],
+			[
+				"url",
+				"url_queue\tstatement"
+			],
+			[
+				"ur",
+				"url_list\tstatement"
+			],
+			[
+				"all",
+				"allow_domin\tparam"
+			],
+			[
+				"led",
+				"LED_Init"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "#include \"stm32f10x.h\"\n#include \"sys.h\"\n#include \"usart.h\"\n#include \"led.h\"\n#include \"delay.h\"\n#include \"myiic.h\"\n#include \"myiic1.h\"\n#include \"AM2320.h\"\n#include \"GY-30.h\"\n#include \"ESP8266.h\"\n//#include \"DL_LN3X.h\"\n#include \"DL_LN33_Send.h\"\n#include \"DL_LN33_Rece.h\"\n\n\n\n\n\nint main(void)\n{\n\n    u16 times = 0;\n    u16 temp;\n    float temp1;\n    u16 humid;\n    float humid1;\n    u32 data;\n    u16 light;\n    float light1;\n    char a[] = \"temp\";\n    char b[] = \"humid\";\n    char c[] = \"light\";\n\n    delay_init();\n    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);  //设置NVIC中断分组2\n    usart3_init(115200);    //串口初始化波特率\n    usart2_init(115200);    //串口初始化波特率\n    usart1_init(115200);    //串口初始化波特率\n    LED_Init();       //LED端口初始化\n    AM2320_Init();    //初始化温湿度IIC\n    IIC_Init1();    //初始化光照IIC\n    GY_30_Init();  //初始化GY-30\n    delay_ms(30);\n    TCP_Con();\n    USART_PutStr(USART2, \"\\r\\n\");\n\n\n    while (1)\n    {\n\n        GY_30_SendMode(0x01);  //上电\n        GY_30_SendMode(0x10);  //设置为连续高分辨率模式\n        delay_ms(180);  //最多延时180ms\n\n        //唤醒传感器并发送读指令\n        AM2320_Wakeup();\n        AM2320_Send_Read();\n        delay_ms(3);\n\n        //将读取的数据转换为光强\n        light = GY_30_Read();\n        light1 = light / 1.2;\n\n        //将读取的数据转换为百进制温湿度\n        data = AM2320_Read() ;\n        humid = data >> 16;\n        humid1 = humid / 10.0; //((humid / 256) * 256 + ((humid % 256) / 16) * 16 + ((humid % 256) % 16)) * 1.0 / 10;\n        temp = data;\n        temp1 = temp / 10.0; //(temp / 256) * 256 + ((temp % 256) / 16) * 16 + ((temp % 256) % 16)) * 1.0 / 10;\n\n        times++;\n        if (times % 1 == 0)\n        {\n            LED0 = !LED0;\n            times = 0;\n        }\n\n\n        // delay_ms(1000);\n        // delay_ms(1000);\n\n        // PutCharTemp(temp1);\n        // delay_ms(1000);\n        // PutCharHumid(humid1);\n        // delay_ms(1000);\n        // PutCharLight(light1);\n        // delay_ms(1000);\n        USART_PutStr(USART2, \"\\r\\n\");\n        USART_PutStr(USART2, \"This is a test!\\r\\n\");\n\n//将数据信息通过zigbee传输\n//        SendInfo(temp, humid, light);\n\n\n\n\n        delay_ms(1000);\n        delay_ms(1000);\n\n\n    }\n\n}\n\n",
+			"file": "/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee_rece/USER/main.c",
+			"file_size": 2328,
+			"file_write_time": 131687699623671054,
+			"settings":
+			{
+				"buffer_size": 2112,
+				"encoding": "Western (Windows 1252)",
+				"line_ending": "Windows",
+				"scratch": true
+			}
+		},
+		{
+			"contents": "/*\n* @Author: Amberimzyj\n* @Date:   2018-04-18 12:13:51\n* @Last Modified by:   Amberimzyj\n* @Last Modified time: 2018-04-19 22:20:30\n*/\n#include \"DL_LN33_Rece.h\"\n#include \"sys.h\"\n#include \"delay.h\"\n#include \"stdio.h\"\n#include \"stdlib.h\"\n#include \"string.h\"\n#include \"usart.h\"\n\n\n\n// u8 data[6] = {0};\n\n//void ReadData(void)\n//{\n\n////    u8 data[6] = {0};\n//    if (USART_GetChar(USART1) == 0xFF)\n//    {\n\n//        if (USART_GetChar(USART1) == 0xFE)\n//        {\n//            for (u8 i = 0; i < 5; i++)\n//            {\n//                USART_GetChar(USART1);\n//            }\n//            for (u8 t = 0; t < 6; t++)\n//            {\n//                data[t] = USART_GetChar(USART1);\n//            }\n//        }\n//    }\n//}\nfloat f1data[3] = {0};\nfloat f2data[3] = {0};\nfloat f3data[3] = {0};\nfloat f4data[3] = {0};\n\nu8 flag1 = 1;\n\nvoid DealData(void)\n{\n    // u8 data[6]={0};\n    // ReadData();\n\n    u16 data1 = 0;\n    float data2 = 0;\n    if (data[4] == 0x1F)\n    {\n\n        data1 = data[6];\n        data1 <<= 8;\n        data1 |= data[7];\n        data2 = data1 / 10.0;\n        f1data[0] = data2;\n\n        data1 = data[8];\n        data1 <<= 8;\n        data1 |= data[9];\n        data2 = data1 / 10.0;\n        f1data[1] = data2;\n\n        data1 = data[10];\n        data1 <<= 8;\n        data1 |= data[11];\n        data2 = data1 / 1.2;\n        f1data[2] = data2;\n\n        printf(\"\\r\\n当前数据来自F1节点\\r\\n\");\n        printf(\"\\r\\n当前温度为：%g ℃\\r\\n\", f1data[0] );\n        printf(\"\\r\\n当前湿度为：%g %%RH\\r\\n\", f1data[1]);\n        printf(\"\\r\\n当前光强为：%g lx\\r\\n\\r\\n\", f1data[2]);\n    }\n\n    else if (data[4] == 0x2F)\n    {\n\n        data1 = data[6];\n        data1 <<= 8;\n        data1 |= data[7];\n        data2 = data1 / 10.0;\n        f2data[0] = data2;\n\n        data1 = data[8];\n        data1 <<= 8;\n        data1 |= data[9];\n        data2 = data1 / 10.0;\n        f2data[1] = data2;\n\n        data1 = data[10];\n        data1 <<= 8;\n        data1 |= data[11];\n        data2 = data1 / 1.2;\n        f2data[2] = data2;\n        printf(\"\\r\\n当前数据来自F2节点\\r\\n\");\n        printf(\"\\r\\n当前温度为：%g ℃\\r\\n\", f2data[0] );\n        printf(\"\\r\\n当前湿度为：%g %%RH\\r\\n\", f2data[1]);\n        printf(\"\\r\\n当前光强为：%g lx\\r\\n\\r\\n\", f2data[2]);\n    }\n    else if (data[4] == 0x3F)\n    {\n\n        data1 = data[6];\n        data1 <<= 8;\n        data1 |= data[7];\n        data2 = data1 / 10.0;\n        f3data[0] = data2;\n\n        data1 = data[8];\n        data1 <<= 8;\n        data1 |= data[9];\n        data2 = data1 / 10.0;\n        f3data[1] = data2;\n\n        data1 = data[10];\n        data1 <<= 8;\n        data1 |= data[11];\n        data2 = data1 / 1.2;\n        f3data[2] = data2;\n        printf(\"\\r\\n当前数据来自F3节点\\r\\n\");\n        printf(\"\\r\\n当前温度为：%g ℃\\r\\n\", f3data[0] );\n        printf(\"\\r\\n当前湿度为：%g %%RH\\r\\n\", f3data[1]);\n        printf(\"\\r\\n当前光强为：%g lx\\r\\n\\r\\n\", f3data[2]);\n    }\n    else if (data[4] == 0x4F)\n    {\n\n        data1 = data[6];\n        data1 <<= 8;\n        data1 |= data[7];\n        data2 = data1 / 10.0;\n        f4data[0] = data2;\n\n        data1 = data[8];\n        data1 <<= 8;\n        data1 |= data[9];\n        data2 = data1 / 10.0;\n        f4data[1] = data2;\n\n        data1 = data[10];\n        data1 <<= 8;\n        data1 |= data[11];\n        data2 = data1 / 1.2;\n        f4data[2] = data2;\n        printf(\"\\r\\n当前数据来自F4节点\\r\\n\");\n        printf(\"\\r\\n当前温度为：%g ℃\\r\\n\", f4data[0] );\n        printf(\"\\r\\n当前湿度为：%g %%RH\\r\\n\", f4data[1]);\n        printf(\"\\r\\n当前光强为：%g lx\\r\\n\\r\\n\", f4data[2]);\n    }\n}\n\nvoid PutData(void)\n{\n    u8 flag = 0;\n    if (flag == 0)\n    {\n\n    }\n}",
+			"file": "/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee_rece/CORE/DL_LN33_Rece.c",
+			"file_size": 3786,
+			"file_write_time": 131686212304923465,
+			"settings":
+			{
+				"buffer_size": 3515,
+				"line_ending": "Windows",
+				"scratch": true
+			}
+		},
+		{
+			"contents": "#include \"sys.h\"\n#include \"usart.h\"\n#include \"string.h\"\n//////////////////////////////////////////////////////////////////////////////////\n//如果使用ucos,则包括下面的头文件即可.\n#if SYSTEM_SUPPORT_OS\n#include \"includes.h\"                   //ucos 使用     \n#endif\n//////////////////////////////////////////////////////////////////////////////////\n//本程序只供学习使用，未经作者许可，不得用于其它任何用途\n//ALIENTEK STM32开发板\n//串口1初始化\n//正点原子@ALIENTEK\n//技术论坛:www.openedv.com\n//修改日期:2012/8/18\n//版本：V1.5\n//版权所有，盗版必究。\n//Copyright(C) 广州市星翼电子科技有限公司 2009-2019\n//All rights reserved\n//********************************************************************************\n//V1.3修改说明\n//支持适应不同频率下的串口波特率设置.\n//加入了对printf的支持\n//增加了串口接收命令功能.\n//修正了printf第一个字符丢失的bug\n//V1.4修改说明\n//1,修改串口初始化IO的bug\n//2,修改了USART_RX_STA,使得串口最大接收字节数为2的14次方\n//3,增加了USART_REC_LEN,用于定义串口最大允许接收的字节数(不大于2的14次方)\n//4,修改了EN_USART3_RX的使能方式\n//V1.5修改说明\n//1,增加了对UCOSII的支持\n//////////////////////////////////////////////////////////////////////////////////\n\n\n//////////////////////////////////////////////////////////////////\n//加入以下代码,支持printf函数,而不需要选择use MicroLIB\n#if 1\n#pragma import(__use_no_semihosting)\n//标准库需要的支持函数\nstruct __FILE\n{\n    int handle;\n\n};\n\nFILE __stdout;\n//定义_sys_exit()以避免使用半主机模式\nint _sys_exit(int x)\n{\n    x = x;\n    return x;\n}\n//重定义fputc函数\nint fputc(int ch, FILE *f)\n{\n    while (USART_GetFlagStatus(USART3, USART_FLAG_TC) != SET);//循环发送,直到发送完毕\n    USART3->DR = (u8) ch;\n    return ch;\n}\n#endif\n\n/*使用microL                                                  ib的方法*/\n/*\nint fputc(int ch, FILE *f)\n{\nUSART_SendData(USART3, (uint8_t) ch);\n\nwhile (USART_GetFlagStatus(USART3, USART_FLAG_TC) == RESET) {}\n\n   return ch;\n}\nint GetKey (void)  {\n\n   while (!(USART3->SR & USART_FLAG_RXNE));\n\n   return ((int)(USART3->DR & 0x1FF));\n}\n*/\n\n#if EN_USART3_RX   //如果使能了接收\n//串口1中断服务程序\n//注意,读取USARTx->SR能避免莫名其妙的错误\nu16 USART3_RX_BUF[USART_REC_LEN];     //接收缓冲,最大USART_REC_LEN个字节.\n//接收状态\n//bit15，  接收完成标志\n//bit14，  接收到0x0d\n//bit13~0，    接收到的有效字节数目\nu16 USART3_RX_STA = 0;     //接收状态标记\n\nvoid usart3_init(u32 bound) {\n    //GPIO端口设置\n    GPIO_InitTypeDef GPIO_InitStructure;\n    USART_InitTypeDef USART_InitStructure;\n    NVIC_InitTypeDef NVIC_InitStructure;\n\n    RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3 , ENABLE); //使能USART3\n    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE); //使能GPIOB时钟\n\n    //USART3_TX   GPIOB.10\n    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10; //PB.10\n    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;\n    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP; //复用推挽输出\n    GPIO_Init(GPIOB, &GPIO_InitStructure);//初始化GPIOB.10\n\n    //USART3_RX     GPIOB.11初始化\n    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;//PA10\n    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;//浮空输入\n    GPIO_Init(GPIOB, &GPIO_InitStructure);//初始化GPIOA.10\n\n    //USART3 NVIC 配置\n    NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;\n    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3 ; //抢占优先级3\n    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;      //子优先级3\n    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;         //IRQ通道使能\n    NVIC_Init(&NVIC_InitStructure); //根据指定的参数初始化VIC寄存器\n\n    //USART 初始化设置\n\n    USART_InitStructure.USART_BaudRate = bound;//串口波特率\n    USART_InitStructure.USART_WordLength = USART_WordLength_8b;//字长为8位数据格式\n    USART_InitStructure.USART_StopBits = USART_StopBits_1;//一个停止位\n    USART_InitStructure.USART_Parity = USART_Parity_No;//无奇偶校验位\n    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;//无硬件数据流控制\n    USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx; //收发模式\n\n    USART_Init(USART3, &USART_InitStructure); //初始化串口3\n    USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);//开启串口接受中断\n    USART_Cmd(USART3, ENABLE);                    //使能串口3\n\n}\n\n//串口3中断\nvoid USART3_IRQHandler(void)                    //串口3中断服务程序\n{\n    u8 Res;\n#if SYSTEM_SUPPORT_OS       //如果SYSTEM_SUPPORT_OS为真，则需要支持OS.\n    OSIntEnter();\n#endif\n    if (USART_GetITStatus(USART3, USART_IT_RXNE) != RESET) //接收中断(接收到的数据必须是0x0d 0x0a结尾)\n    {\n        Res = USART_ReceiveData(USART3); //读取接收到的数据\n\n\n        if ((USART3_RX_STA & 0x8000) == 0) //接收未完成\n        {\n            if (USART3_RX_STA & 0x4000) //接收到了0x0d\n            {\n                if (Res != 0x0a)USART3_RX_STA = 0; //接收错误,重新开始\n                else USART3_RX_STA |= 0x8000; //接收完成了\n            }\n            else //还没收到0X0D\n            {\n                if (Res == 0x0d)USART3_RX_STA |= 0x4000;\n                else\n                {\n                    USART3_RX_BUF[USART3_RX_STA & 0X3FFF] = Res ;\n                    USART3_RX_STA++;\n                    if (USART3_RX_STA > (USART_REC_LEN - 1))USART3_RX_STA = 0; //接收数据错误,重新开始接收\n                }\n            }\n        }\n    }\n#if SYSTEM_SUPPORT_OS   //如果SYSTEM_SUPPORT_OS为真，则需要支持OS.\n    OSIntExit();\n#endif\n}\n#endif\n\n\n#if EN_USART2_RX   //如果使能了接收\n//串口1中断服务程序\n//注意,读取USARTx->SR能避免莫名其妙的错误\nu16 USART2_RX_BUF[USART_REC_LEN];     //接收缓冲,最大USART_REC_LEN个字节.\n//接收状态\n//bit15，  接收完成标志\n//bit14，  接收到0x0d\n//bit13~0，    接收到的有效字节数目\nu16 USART2_RX_STA = 0;     //接收状态标记\n//USART2端口设置\nvoid usart2_init(u32 bound) {\n    //GPIO端口设置\n    GPIO_InitTypeDef GPIO_InitStructure;\n    USART_InitTypeDef USART_InitStructure;\n    NVIC_InitTypeDef NVIC_InitStructure;\n\n    RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE); //使能USART2\n    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE); //使能GPIOA时钟\n\n    //USART2_TX   GPIOA.2\n    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2; //PA.2\n    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;\n    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP; //复用推挽输出\n    GPIO_Init(GPIOA, &GPIO_InitStructure);//初始化GPIOA.2\n\n    //USART2_RX     GPIOA.3初始化\n    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;//PA.3\n    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;//浮空输入\n    GPIO_Init(GPIOA, &GPIO_InitStructure);//初始化GPIOA.3\n\n    //USART1 NVIC 配置\n    NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;\n    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3 ; //抢占优先级3\n    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;      //子优先级3\n    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;         //IRQ通道使能\n    NVIC_Init(&NVIC_InitStructure); //根据指定的参数初始化VIC寄存器\n\n    //USART 初始化设置\n\n    USART_InitStructure.USART_BaudRate = bound;//串口波特率\n    USART_InitStructure.USART_WordLength = USART_WordLength_8b;//字长为8位数据格式\n    USART_InitStructure.USART_StopBits = USART_StopBits_1;//一个停止位\n    USART_InitStructure.USART_Parity = USART_Parity_No;//无奇偶校验位\n    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;//无硬件数据流控制\n    USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx; //收发模式\n\n    USART_Init(USART2, &USART_InitStructure); //初始化串口1\n    USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);//开启串口接受中断\n    USART_Cmd(USART2, ENABLE);                    //使能串口1\n\n}\n\n//串口2中断\nvoid USART2_IRQHandler(void)                    //串口2中断服务程序\n{\n    u8 Res;\n#if SYSTEM_SUPPORT_OS       //如果SYSTEM_SUPPORT_OS为真，则需要支持OS.\n    OSIntEnter();\n#endif\n    if (USART_GetITStatus(USART2, USART_IT_RXNE) != RESET) //接收中断(接收到的数据必须是0x0d 0x0a结尾)\n    {\n        Res = USART_ReceiveData(USART2); //读取接收到的数据\n\n        if ((USART2_RX_STA & 0x8000) == 0) //接收未完成\n        {\n            if (USART2_RX_STA & 0x4000) //接收到了0x0d\n            {\n                if (Res != 0x0a)USART2_RX_STA = 0; //接收错误,重新开始\n                else USART2_RX_STA |= 0x8000; //接收完成了\n            }\n            else //还没收到0X0D\n            {\n                if (Res == 0x0d)USART2_RX_STA |= 0x4000;\n                else\n                {\n                    USART2_RX_BUF[USART2_RX_STA & 0X3FFF] = Res ;\n                    USART2_RX_STA++;\n                    if (USART2_RX_STA > (USART_REC_LEN - 1))USART2_RX_STA = 0; //接收数据错误,重新开始接收\n                }\n            }\n        }\n    }\n#if SYSTEM_SUPPORT_OS   //如果SYSTEM_SUPPORT_OS为真，则需要支持OS.\n    OSIntExit();\n#endif\n}\n#endif\n\n#if EN_USART1_RX   //如果使能了接收\n//串口1中断服务程序\n//注意,读取USARTx->SR能避免莫名其妙的错误\nu16 USART1_RX_BUF[USART_REC_LEN];     //接收缓冲,最大USART_REC_LEN个字节.\n//接收状态\n//bit15，  接收完成标志\n//bit14，  接收到0x0d\n//bit13~0，    接收到的有效字节数目\nu16 USART1_RX_STA = 0;     //接收状态标记\n//USART1端口设置\nvoid usart1_init(u32 bound) {\n    //GPIO端口设置\n    GPIO_InitTypeDef GPIO_InitStructure;\n    USART_InitTypeDef USART_InitStructure;\n    NVIC_InitTypeDef NVIC_InitStructure;\n\n\n    RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1 | RCC_APB2Periph_GPIOA, ENABLE); //使能USART2、使能GPIOA时钟\n\n    //USART1_TX   GPIOA.9\n    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9; //PA.9\n    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;\n    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP; //复用推挽输出\n    GPIO_Init(GPIOA, &GPIO_InitStructure);//初始化GPIOA.9\n\n    //USART1_RX     GPIOA.10初始化\n    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;//PA.10\n    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;//浮空输入\n    GPIO_Init(GPIOA, &GPIO_InitStructure);//初始化GPIOA.10\n\n    //USART1 NVIC 配置\n    NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;\n    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3 ; //抢占优先级3\n    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;      //子优先级3\n    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;         //IRQ通道使能\n    NVIC_Init(&NVIC_InitStructure); //根据指定的参数初始化VIC寄存器\n\n    //USART 初始化设置\n\n    USART_InitStructure.USART_BaudRate = bound;//串口波特率\n    USART_InitStructure.USART_WordLength = USART_WordLength_8b;//字长为8位数据格式\n    USART_InitStructure.USART_StopBits = USART_StopBits_1;//一个停止位\n    USART_InitStructure.USART_Parity = USART_Parity_No;//无奇偶校验位\n    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;//无硬件数据流控制\n    USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx; //收发模式\n\n    USART_Init(USART1, &USART_InitStructure); //初始化串口1\n    USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);//开启串口接受中断\n    USART_Cmd(USART1, ENABLE);                    //使能串口1\n\n}\n\n//定义全局数组\n// u8 usartrece[13] = {0};\n// u8 len = 0;\n\n//串口1中断\nu8 USART_GetChar(USART_TypeDef* USARTx);\nu8 flag = 0;\nu8 data[13] = {0};\nvoid USART1_IRQHandler(void)                    //串口2中断服务程序\n{\n    u8 Res;\n    static u8 len = 0;\n#if SYSTEM_SUPPORT_OS       //如果SYSTEM_SUPPORT_OS为真，则需要支持OS.\n    OSIntEnter();\n#endif\n    if (USART_GetITStatus(USART1, USART_IT_RXNE) != RESET) //接收中断\n    {\n        Res = USART_ReceiveData(USART1);\n        if (flag == 0 && Res == 0xFE)\n        {\n            data[0] = Res;\n            len = 1;\n            flag = 1;\n        }\n        else if (flag == 1 && Res == 0xFF)\n        {\n            flag = 0;\n            DealData();\n            data[len] = Res;\n            len = 0;\n        }\n        else if (flag == 1)\n        {\n            data[len] = Res;\n            len++;\n            // if (len == 12)\n            // {\n            //     flag = 0;\n            //     len = 0;\n            // }\n        }\n        // Res = USART_ReceiveData(USART1); //读取接收到的数据\n        // // usartrece[len] = Res; //将串口接收到的数据放到缓冲数组中\n\n        // // if (Res != 0xFF && len < 13)\n        // // {\n        // //     usartrece[len] = Res;\n        // //     len++;\n        // // }\n        // // else if (Res == 0xff || len >= 13)\n        // // {\n        // //     len = 0;\n        // //     memset(usartrece, 0, 13);\n        // // }\n        // if ((USART1_RX_STA & 0x8000) == 0) //接收未完成\n        // {\n        //     if (USART1_RX_STA & 0x4000) //接收到了0x0d\n        //     {\n        //         if (Res != 0x0a)USART1_RX_STA = 0; //接收错误,重新开始\n        //         // len = 0;\n        //         // usartrece[12] = {0};\n        //         else USART1_RX_STA |= 0x8000; //接收完成了\n        //     }\n        //     else //还没收到0X0D\n        //     {\n        //         if (Res == 0x0d)USART1_RX_STA |= 0x4000;\n        //         else\n        //         {\n        //             USART1_RX_BUF[USART1_RX_STA & 0X3FFF] = Res ;\n        //             USART1_RX_STA++;\n        //             // usartrece[len]=Res;\n        //             // len++;\n        //             if (USART1_RX_STA > (USART_REC_LEN - 1))\n        //             {\n        //                 USART1_RX_STA = 0; //接收数据错误,重新开始接收\n        //                 // len=0;\n        //             }\n        //         }\n        //     }\n        // }\n    }\n#if SYSTEM_SUPPORT_OS   //如果SYSTEM_SUPPORT_OS为真，则需要支持OS.\n    OSIntExit();\n#endif\n}\n#endif\n\n\n// u8 USART_GetChar(USART_TypeDef* USARTx)\n// {\n//     return USART_ReceiveData(USARTx);\n// }\n\nvoid USART_PutChar(USART_TypeDef* USARTx, uint8_t Data)\n{\n    USART_SendData(USARTx, Data);\n    while (USART_GetFlagStatus(USARTx, USART_FLAG_TC) == RESET) {}\n}\n\nvoid USART_PutStr(USART_TypeDef* USARTx, uint8_t *str)\n{\n    while (0 != *str)\n    {\n        USART_PutChar(USARTx, *str);\n        str++;\n    }\n}\n\nvoid PutCharTemp(float data)\n{\n    char da[20];\n    USART_PutStr(USART2, \"当前温度为：\");\n    sprintf(da, \"%g ℃\\r\\n\", data);\n    USART_PutStr(USART2, da);\n}\n\nvoid PutCharHumid(float data)\n{\n    char da[20];\n    USART_PutStr(USART2, \"当前湿度为：\");\n    sprintf(da, \"%g %%RH\\r\\n\", data);\n    USART_PutStr(USART2, da);\n}\n\nvoid PutCharLight(float data)\n{\n    char da[20];\n    USART_PutStr(USART2, \"当前光强为：\");\n    sprintf(da, \"%g lx\\r\\n\", data);\n    USART_PutStr(USART2, da);\n}\n",
+			"file": "/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee_rece/SYSTEM/usart/usart.c",
+			"file_size": 14594,
+			"file_write_time": 131686196340978283,
+			"settings":
+			{
+				"buffer_size": 13008,
+				"line_ending": "Windows",
+				"scratch": true
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Anaconda Python Builder",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					"Syntax Check"
+				],
+				[
+					"Packages/Python 3/Python3.sublime-build",
+					""
+				],
+				[
+					"Packages/SublimeREPL/sublimerepl_build_system_hack.sublime-build",
+					""
+				]
+			],
+			[
+				"Anaconda Python Builder",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 584.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"pcd",
+				"Package Control: Disable Package"
+			],
+			[
+				"pci",
+				"Package Control: Install Package"
+			],
+			[
+				"ayu",
+				"ayu: Activate theme"
+			],
+			[
+				"pce",
+				"Package Control: Enable Package"
+			],
+			[
+				"theme",
+				"UI: Select Theme"
+			],
+			[
+				"PCE",
+				"Package Control: Enable Package"
+			],
+			[
+				"PCD",
+				"Package Control: Disable Package"
+			],
+			[
+				"convertto",
+				"ConvertToUTF8: Reload with Encoding"
+			],
+			[
+				"ma",
+				"Material Theme: Activate theme"
+			],
+			[
+				"da ui",
+				"DA UI: Select Skin"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"",
+				"Install Package Control"
+			]
+		],
+		"width": 810.0
+	},
+	"console":
+	{
+		"height": 225.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee_rece",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee_rece/SYSTEM",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee_rece/SYSTEM/usart",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee_rece/USER"
+	],
+	"file_history":
+	[
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee_send/USER/main.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee_send/USER/EventRecorderStub.scvd",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee/SYSTEM/usart/usart.h",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee/SYSTEM/usart/usart.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee/CORE/DL_LN33_Send.h",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee/CORE/DL_LN33_Send.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee/USER/main.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee/CORE/DL_LN33_Rece.h",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee/CORE/DL_LN33_Rece.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee/CORE/DL_LN3X_send.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee/CORE/lee.h",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee/HexSend.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee/CORE/DL_LN3X_Send.h",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee/CORE/DL_LN3X_recv.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee/USER/EventRecorderStub.scvd",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/ESP8266/SYSTEM/usart/usart.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/ESP8266/USER/main.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/ESP8266/SYSTEM/usart/usart.h",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/ESP8266/CORE/ESP8266.h",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/ESP8266/CORE/ESP8266.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/ESP8266/USER/EventRecorderStub.scvd",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC（ALL）/CORE/myiic.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC（ALL）/USER/main.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC（ALL）/CORE/myiic.h",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC（GY-30)/USER/main.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC（GY-30)/CORE/myiic.h",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC（GY-30)/CORE/myiic.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC（GY-30)/CORE/GY-30.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC（GY-30)/CORE/GY-30.h",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC（GY-30)/USER/IIC.uvguix.Amberimzyj",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC/CORE/myiic.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC/STM32F10x_FWLib/inc/stm32f10x_gpio.h",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC/CORE/myiic.h",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC/USER/main.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC/CORE/AM2320.c",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/SublimeREPL/SublimeREPL.sublime-settings",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC/STM32F10x_FWLib/src/misc.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC/SYSTEM/usart/usart.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC/SYSTEM/usart/usart.h",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC/CORE/AM2320.h",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC/SYSTEM/delay/delay.h",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/User/FileHeader.sublime-settings",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/FileHeader/FileHeader.sublime-settings",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC/CORE/IIC.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC/.clang_complete",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC/USER/IIC.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC/USER/EventRecorderStub.scvd",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/IIC/CORE/led.c",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/User/Terminal.sublime-settings",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/Terminal/Default (Windows).sublime-keymap",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/Terminal/Terminal.sublime-settings",
+		"/D/SHLLL/keyvisual/keyvisual.sublime-project",
+		"/D/SHLLL/keyvisual/schedule.py",
+		"/D/SHLLL/keyvisual/downloader.py",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/AdvancedNewFile/README.md",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/Package Control/Package Control.sublime-settings",
+		"/D/study/The eighth term/graduation design/STM32/code by myself/3-serial port/SYSTEM/usart/usart.c",
+		"/D/study/The eighth term/graduation design/STM32/code by myself/3-serial port/USER/main.c",
+		"/D/study/The eighth term/graduation design/STM32/code by myself/3-serial port/SYSTEM/usart/usart.c.dump",
+		"/D/study/The eighth term/graduation design/STM32/code by myself/3-serial port/USER/system_stm32f4xx.c",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/ClangAutoComplete/ClangAutoComplete.sublime-settings",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/User/ClangAutoComplete.sublime-settings",
+		"/D/study/The eighth term/graduation design/STM32/自己仿照的例程/1-led/USER/main.c",
+		"/D/study/The eighth term/graduation design/STM32/自己仿照的例程/1-led/HARDWARE/led/led.c",
+		"/D/study/The eighth term/graduation design/STM32/自己仿照的例程/1-led/HARDWARE/led/led.h",
+		"/D/study/The eighth term/graduation design/STM32/自己仿照的例程/1-led/SYSTEM/delay/delay.c",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/auto-save/auto_save.sublime-settings",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/User/auto_save.sublime-settings",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/User/SublimeAStyleFormatter.sublime-settings",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/SublimeAStyleFormatter/SublimeAStyleFormatter.sublime-settings",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/Alignment/Default (Windows).sublime-keymap",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/DocBlockr/Base File.sublime-settings",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/SublimeAStyleFormatter/Default (Windows).sublime-keymap",
+		"/D/study/The eighth term/graduation design/STM32/自己仿照的例程/1-led/.clang_complete",
+		"/D/study/The eighth term/graduation design/STM32/自己仿照的例程/1-led/led.sublime-project",
+		"/D/study/The eighth term/graduation design/STM32/自己仿照的例程/1-led/keilkilll.bat",
+		"/D/study/The eighth term/graduation design/STM32/自己仿照的例程/1-led/Template.build_log.htm"
+	],
+	"find":
+	{
+		"height": 30.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"USART_ReceiveData(USART1)",
+			"\"\n",
+			"]);\n",
+			"*asic",
+			"];\n",
+			");\n",
+			"10",
+			"清楚寄存器内容",
+			"AT24CXX"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee_rece/USER/main.c",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2112,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2050,
+								2050
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.clone_locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										2510,
+										2511
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/curly_bracket.png",
+										"region.purplish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										911,
+										912
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.clone_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content"
+							],
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										2106,
+										2107
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/curly_bracket.png",
+										"region.purplish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										911,
+										912
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content"
+							],
+							"c_time":
+							[
+								128,
+								3,
+								99,
+								100,
+								97,
+								116,
+								101,
+								116,
+								105,
+								109,
+								101,
+								10,
+								100,
+								97,
+								116,
+								101,
+								116,
+								105,
+								109,
+								101,
+								10,
+								113,
+								0,
+								67,
+								10,
+								7,
+								226,
+								4,
+								12,
+								20,
+								19,
+								16,
+								12,
+								57,
+								93,
+								113,
+								1,
+								133,
+								113,
+								2,
+								82,
+								113,
+								3,
+								46
+							],
+							"in_converting": true,
+							"is_init_dirty_state": true,
+							"origin_encoding": "GB2312",
+							"syntax": "Packages/C++/C.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1584.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee_rece/CORE/DL_LN33_Rece.c",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3515,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3434,
+								3434
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.clone_locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										3819,
+										3820
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/curly_bracket.png",
+										"region.purplish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										933,
+										934
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.clone_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content"
+							],
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										3439,
+										3440
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/curly_bracket.png",
+										"region.purplish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										2848,
+										2849
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content"
+							],
+							"c_time":
+							[
+								128,
+								3,
+								99,
+								100,
+								97,
+								116,
+								101,
+								116,
+								105,
+								109,
+								101,
+								10,
+								100,
+								97,
+								116,
+								101,
+								116,
+								105,
+								109,
+								101,
+								10,
+								113,
+								0,
+								67,
+								10,
+								7,
+								226,
+								4,
+								18,
+								12,
+								13,
+								51,
+								10,
+								97,
+								26,
+								113,
+								1,
+								133,
+								113,
+								2,
+								82,
+								113,
+								3,
+								46
+							],
+							"in_converting": true,
+							"is_init_dirty_state": false,
+							"origin_encoding": "GB2312",
+							"syntax": "Packages/C++/C.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2771.33333333,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/D/study/The eighth term/graduation design/STM32/STM32F103/codes/zigbee_rece/SYSTEM/usart/usart.c",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 13008,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.clone_locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.clone_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content"
+							],
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content"
+							],
+							"c_time":
+							[
+								128,
+								3,
+								99,
+								100,
+								97,
+								116,
+								101,
+								116,
+								105,
+								109,
+								101,
+								10,
+								100,
+								97,
+								116,
+								101,
+								116,
+								105,
+								109,
+								101,
+								10,
+								113,
+								0,
+								67,
+								10,
+								7,
+								226,
+								4,
+								12,
+								20,
+								19,
+								16,
+								11,
+								252,
+								81,
+								113,
+								1,
+								133,
+								113,
+								2,
+								82,
+								113,
+								3,
+								46
+							],
+							"in_converting": true,
+							"is_init_dirty_state": false,
+							"origin_encoding": "GB2312",
+							"syntax": "Packages/C++/C.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 6300.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 30.0
+	},
+	"input":
+	{
+		"height": 76.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.astyle_error_message":
+	{
+		"height": 0.0
+	},
+	"output.exec":
+	{
+		"height": 190.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.mdpopups":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "IIC.sublime-project",
+	"replace":
+	{
+		"height": 56.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"esp",
+				"CORE\\ESP8266.h"
+			],
+			[
+				"main",
+				"USER\\main.c"
+			],
+			[
+				"usart",
+				"SYSTEM\\usart\\usart.h"
+			],
+			[
+				"de",
+				"SYSTEM\\delay\\delay.h"
+			],
+			[
+				"",
+				"CORE\\AM2320.h"
+			],
+			[
+				"AM",
+				"CORE\\AM2320.c"
+			],
+			[
+				"my",
+				"CORE\\myiic.c"
+			],
+			[
+				"led",
+				"CORE\\led.c"
+			],
+			[
+				"m",
+				"USER\\main.c"
+			],
+			[
+				"led.h",
+				"HARDWARE\\led\\led.h"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 245.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

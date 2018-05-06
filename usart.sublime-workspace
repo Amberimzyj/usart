@@ -1,0 +1,354 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"t",
+				"times\tu16 times"
+			],
+			[
+				"USART_",
+				"USART_RX_STA"
+			],
+			[
+				"pop",
+				"popleft\tfunction"
+			],
+			[
+				"url",
+				"url_queue\tstatement"
+			],
+			[
+				"ur",
+				"url_list\tstatement"
+			],
+			[
+				"all",
+				"allow_domin\tparam"
+			],
+			[
+				"de",
+				"delay_ms"
+			],
+			[
+				"dela",
+				"delay_init"
+			],
+			[
+				"inc",
+				"inc\t#include \"…\""
+			],
+			[
+				"led",
+				"LED_Init"
+			],
+			[
+				"in",
+				"inc\t#include \"…\""
+			],
+			[
+				"delay",
+				"delay_init\tvoid delay_init(u8 SYSCLK)"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Anaconda Python Builder",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					"Syntax Check"
+				],
+				[
+					"Packages/Python 3/Python3.sublime-build",
+					""
+				],
+				[
+					"Packages/SublimeREPL/sublimerepl_build_system_hack.sublime-build",
+					""
+				]
+			],
+			[
+				"Anaconda Python Builder",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 584.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"pcd",
+				"Package Control: Disable Package"
+			],
+			[
+				"pci",
+				"Package Control: Install Package"
+			],
+			[
+				"ayu",
+				"ayu: Activate theme"
+			],
+			[
+				"pce",
+				"Package Control: Enable Package"
+			],
+			[
+				"theme",
+				"UI: Select Theme"
+			],
+			[
+				"PCE",
+				"Package Control: Enable Package"
+			],
+			[
+				"PCD",
+				"Package Control: Disable Package"
+			],
+			[
+				"convertto",
+				"ConvertToUTF8: Reload with Encoding"
+			],
+			[
+				"ma",
+				"Material Theme: Activate theme"
+			],
+			[
+				"da ui",
+				"DA UI: Select Skin"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"",
+				"Install Package Control"
+			]
+		],
+		"width": 810.0
+	},
+	"console":
+	{
+		"height": 225.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+	],
+	"file_history":
+	[
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/usart/USER/main.c",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/usart/.clang_complete",
+		"/D/study/The eighth term/graduation design/STM32/STM32F103/codes/usart/CORE/led.c",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/User/Terminal.sublime-settings",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/Terminal/Default (Windows).sublime-keymap",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/Terminal/Terminal.sublime-settings",
+		"/D/SHLLL/keyvisual/keyvisual.sublime-project",
+		"/D/SHLLL/keyvisual/schedule.py",
+		"/D/SHLLL/keyvisual/downloader.py",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/AdvancedNewFile/README.md",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/FileHeader/FileHeader.sublime-settings",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/User/FileHeader.sublime-settings",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/Package Control/Package Control.sublime-settings",
+		"/D/study/The eighth term/graduation design/STM32/code by myself/3-serial port/SYSTEM/usart/usart.c",
+		"/D/study/The eighth term/graduation design/STM32/code by myself/3-serial port/USER/main.c",
+		"/D/study/The eighth term/graduation design/STM32/code by myself/3-serial port/SYSTEM/usart/usart.c.dump",
+		"/D/study/The eighth term/graduation design/STM32/code by myself/3-serial port/USER/system_stm32f4xx.c",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/ClangAutoComplete/ClangAutoComplete.sublime-settings",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/User/ClangAutoComplete.sublime-settings",
+		"/D/study/The eighth term/graduation design/STM32/自己仿照的例程/1-led/USER/main.c",
+		"/D/study/The eighth term/graduation design/STM32/自己仿照的例程/1-led/HARDWARE/led/led.c",
+		"/D/study/The eighth term/graduation design/STM32/自己仿照的例程/1-led/HARDWARE/led/led.h",
+		"/D/study/The eighth term/graduation design/STM32/自己仿照的例程/1-led/SYSTEM/delay/delay.c",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/auto-save/auto_save.sublime-settings",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/User/auto_save.sublime-settings",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/User/SublimeAStyleFormatter.sublime-settings",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/SublimeAStyleFormatter/SublimeAStyleFormatter.sublime-settings",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/Alignment/Default (Windows).sublime-keymap",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/DocBlockr/Base File.sublime-settings",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Users/Amberimzyj/AppData/Roaming/Sublime Text 3/Packages/SublimeAStyleFormatter/Default (Windows).sublime-keymap",
+		"/D/study/The eighth term/graduation design/STM32/自己仿照的例程/1-led/.clang_complete",
+		"/D/study/The eighth term/graduation design/STM32/自己仿照的例程/1-led/led.sublime-project",
+		"/D/study/The eighth term/graduation design/STM32/自己仿照的例程/1-led/keilkilll.bat",
+		"/D/study/The eighth term/graduation design/STM32/自己仿照的例程/1-led/Template.build_log.htm"
+	],
+	"find":
+	{
+		"height": 41.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 41.0
+	},
+	"input":
+	{
+		"height": 76.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.astyle_error_message":
+	{
+		"height": 0.0
+	},
+	"output.exec":
+	{
+		"height": 190.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.mdpopups":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "usart.sublime-project",
+	"replace":
+	{
+		"height": 76.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"led",
+				"CORE\\led.c"
+			],
+			[
+				"m",
+				"USER\\main.c"
+			],
+			[
+				"led.h",
+				"HARDWARE\\led\\led.h"
+			],
+			[
+				"main",
+				"USER\\main.c"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 388.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
